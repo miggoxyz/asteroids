@@ -4,24 +4,33 @@ from player import Player
 
 
 def main():
-    print("Starting asteroids!")
-    # INIT
     pygame.init()
-    screen = pygame.display.set_mode(size=(SCREEN_WIDTH, SCREEN_HEIGHT))
-    running = True
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
-    dt = 0  # delta time, time passed since last frame
+
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    Player.containers = (updatable, drawable)
+
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
 
+    dt = 0
+
+    running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
 
-        player.update(dt)
+        for obj in updatable:
+            obj.update(dt)
 
         screen.fill(BACKGROUND_COLOR)
-        player.draw(screen)
+
+        for obj in drawable:
+            obj.draw(screen)
+
         pygame.display.flip()
 
         # used to limit to 60 fps
